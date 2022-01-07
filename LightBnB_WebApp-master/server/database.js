@@ -91,7 +91,7 @@ const getAllProperties = (options, limit = 10) => {
   const queryParams = [];
 
   let queryString = `
-  SELECT properties.*, avg(property_reviews.rating) as average_rating
+  SELECT properties.*, AVG(property_reviews.rating) AS average_rating
   FROM properties
   JOIN property_reviews ON properties.id = property_reviews.property_id
   `;
@@ -130,17 +130,15 @@ const getAllProperties = (options, limit = 10) => {
 
   queryParams.push(limit);
   queryString += `
-  GROUP BY properties.id
-  ORDER BY cost_per_night
-  LIMIT $${queryParams.length};
-  `;
+    GROUP BY properties.id
+    ORDER BY cost_per_night
+    LIMIT $${queryParams.length};
+    `;
 
   console.log(queryString, queryParams)
 
   //Return the query based on the user input
-  return
-  pool.query(queryString, queryParams)
-    .then(res => res.rows);
+  return pool.query(queryString, queryParams).then(res => res.rows);
 };
 
 exports.getAllProperties = getAllProperties;
